@@ -1,5 +1,5 @@
 # Install php/laravel dependencies ignore platform requirements
-composer install --ignore-platform-reqs
+`composer install --ignore-platform-reqs`
 
 # Install node/vuejs dependencies force
 npm install --force
