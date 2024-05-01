@@ -1,3 +1,5 @@
+# How to run the app on local environment
+
 ## Install php/laravel dependencies ignore platform requirements
 ```bash
 composer install --ignore-platform-reqs
