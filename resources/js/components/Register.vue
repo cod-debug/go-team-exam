@@ -88,7 +88,6 @@
 
 <script>
 import { Notify } from 'quasar';
-import axios from 'axios';
 export default {
     data: () => {
         return {
@@ -122,16 +121,28 @@ export default {
                 password: this.password
             }
 
-            let {data, status} = await axios({
-                method: "post",
-                url: `/api/auth/register`,
-                data: payload,
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8"
-                },
-            });
+            let {data, status} = await this.$api.register(payload);
 
-            console.log(data);
+            if([200, 201].includes(status)){
+                Notify.create({
+                    message: data.message,
+                    position: 'top-right',
+                    closeBtn: "X",
+                    timeout: 2000,
+                    color: 'green',
+                });
+
+                this.back();
+            } else {
+                Notify.create({
+                    message: data.message,
+                    position: 'top-right',
+                    closeBtn: "X",
+                    timeout: 2000,
+                    color: 'red',
+                });
+            }
+            this.is_submitting = false;
         },
         back() {
             this.$emit('openLogin');

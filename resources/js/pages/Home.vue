@@ -12,22 +12,22 @@
                 <div class=" text-orange-6 text-h4">Let's checkout some Pokemon!</div>
               </div>
               <div class="full-width">
-                <q-input rounded outlined v-model="username" label="Username" :rules="[
+                <q-input :disable="is_submitting" rounded outlined v-model="username" label="Username" :rules="[
                       val => val && val.length > 0 || 'Username is required',
                     ]"/>
               </div>
               <div class="full-width q-py-sm">
-                <q-input rounded outlined v-model="password" label="Password" :type="show_password ? 'text': 'password'" :rules="[
+                <q-input :disable="is_submitting" rounded outlined v-model="password" label="Password" :type="show_password ? 'text': 'password'" :rules="[
                   val => val && val.length > 0 || 'Password is required',
                 ]">
                   <template v-slot:append>
-                    <q-btn round dense flat :icon="show_password ? 'visibility' : 'visibility_off'" @click="show_password = !show_password" />
+                    <q-btn  :disable="is_submitting" round dense flat :icon="show_password ? 'visibility' : 'visibility_off'" @click="show_password = !show_password" />
                   </template>
                 </q-input>
               </div>
               <div class="full-width q-py-sm flex items-center justify-between q-pl-sm">
                 <div class="text-h6 text-grey-6">Sign in</div>
-                <q-btn type="submit" style="aspect-ratio: 1/1; border-radius: 50%;" icon="arrow_forward" color="red-8" glossy />
+                <q-btn :disable="is_submitting" type="submit" style="aspect-ratio: 1/1; border-radius: 50%;" icon="arrow_forward" color="red-8" glossy />
               </div>
               <div class="text-center">
                 <span class="text-grey-7">Don't have an account yet? <span @click="openRegister" class="text-orange-8 cursor-pointer">Sign up</span></span>
@@ -42,7 +42,6 @@
   <script>
   import { Notify } from 'quasar';  
   import RegisterUser from '../components/Register.vue';
-  import axios from 'axios';
   export default {
     data: () => {
       return {
@@ -51,6 +50,7 @@
         show_password: false,
 
         is_register: false,
+        is_submitting: false,
       }
     },
     methods: {
@@ -64,16 +64,32 @@
           email: this.username,
           password: this.password
         }
-        let {data, status} = await axios({
-          method: "post",
-          url: `/api/auth/login`,
-          data: payload,
-          headers: {
-              "Content-Type": "application/json; charset=utf-8"
-          },
-        });
-      },
+        this.is_submitting = true;
+        let {data, status} = await this.$api.login(payload);
+        
+        if([200, 201].includes(status)){
+          Notify.create({
+            message: data.message,
+            position: 'top-right',
+            closeBtn: "X",
+            timeout: 2000,
+            color: 'green',
+          });
 
+          this.$router.get('/pokemon/dashboard');
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user_data', JSON.stringify(data.user));
+        } else {
+          Notify.create({
+            message: data.message,
+            position: 'top-right',
+            closeBtn: "X",
+            timeout: 2000,
+            color: 'red',
+          });
+        }
+        this.is_submitting = false;
+      },
       openRegister(){
         this.is_register = true;
       },
@@ -83,7 +99,12 @@
     },
     components: {
       AppRegisterUser: RegisterUser,
-    }
+    },
+    mounted(){
+      if(localStorage.getItem('token')){
+        this.$router.get('/pokemon/dashboard');
+      }
+    },
   }
   </script>
   

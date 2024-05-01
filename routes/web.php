@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return Inertia('Home');
 });
+
+Route::group(['prefix'=> 'pokemon'], function () {
+    Route::get('dashboard', function(){
+        return Inertia('Dashboard');
+    })->name('dashboard');
+
+    Route::get('users', function(){
+        return Inertia('Users');
+    })->name('users');
+});

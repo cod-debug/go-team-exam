@@ -25,6 +25,7 @@ class User extends Authenticatable
         'birthdate',
         'username',
         'email',
+        'pokemons',
         'password',
     ];
 
@@ -45,5 +46,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'pokemons' => 'array'
     ];
 }

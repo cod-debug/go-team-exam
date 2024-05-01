@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\HasApiToken;
 
 use Illuminate\Http\Request;
-
+use Auth as NewAuth;
 class AuthController extends Controller
 {
     /**
@@ -83,19 +83,20 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password'])) && !Auth::attempt($request->only(['username', 'password']))){
+            if(!Auth::attempt($request->only(['email', 'password'])) && !Auth::attempt(['username' => $request->email, 'password' => $request->password])) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Email & Password does not match with our record.',
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->orWhere('username', $request->username)->first();
+            $user = User::where('email', $request->email)->orWhere('username', $request->email)->first();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Logged In Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $user->createToken("API TOKEN")->plainTextToken,
+                'user' => $user,
             ], 200);
 
         } catch (\Throwable $th) {
