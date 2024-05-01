@@ -119,4 +119,42 @@ class AuthController extends Controller
             'message' => "created"
         ], 200);
     }
+
+    public function updateProfile(Request $request){
+
+        try {
+            // Validated
+            $validateUser = Validator::make($request->all(),
+            [
+                'first_name' => 'required',
+                'middle_name' => '',
+                'last_name' => 'required',
+                'hobbies' => 'required',
+                'birthdate' => 'required',
+            ]);
+
+            if($validateUser->fails()){
+                return response()->json([
+                    'status_code' => 400,
+                    'message' => 'Validation error!!!',
+                    'errors' => $validateUser->errors()
+                ], 400);
+            }
+
+            $user = User::find($request->id);
+
+            $user->update($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User Updated Successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

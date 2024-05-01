@@ -25,4 +25,8 @@ Route::group(['prefix'=> 'pokemon'], function () {
     Route::get('users', function(){
         return Inertia('Users');
     })->name('users');
+
+    Route::get('account', function(){
+        return Inertia('Account');
+    })->name('my-account');
 });

@@ -130,5 +130,24 @@ export default {
             res.status = e?.response?.status || null
         }
         return res;
+    },
+
+    updateProfile: async (payload) => {
+        let res = {};
+        try {
+            res = await axios({
+            method: "post",
+            url: `/api/users/update-profile`,
+            params: payload,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+        });
+        } catch (e) {
+            console.log(e);
+            res.data = e?.response?.data || null
+            res.status = e?.response?.status || null
+        }
+        return res;
     }
 }

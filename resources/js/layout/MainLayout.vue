@@ -26,6 +26,15 @@
                     </a>
                     <span class="tooltip">User</span>
                 </li>
+                <li>
+                    <a class="cursor-pointer" @click="$router.get('account')">
+                        <i class='bx bx-user'>
+                            <q-icon name="account_circle" />
+                        </i>
+                        <span class="links_name pocket-monk">My Account</span>
+                    </a>
+                    <span class="tooltip">My Account</span>
+                </li>
                 <li class="profile cursor-pointer" @click="logout" >
                     <div class="profile-details">
                         <i class='bx bx-user'>

@@ -32,4 +32,6 @@ Route::group([
     Route::post('/like-pokemon', 'UserController@addLikedPokemon')->name('like-pokemon');
     Route::post('/dislike-pokemon', 'UserController@addDislikedPokemon')->name('dislike-pokemon');
     Route::get('/list', 'UserController@list')->name('user-list');
+    Route::post('/update-profile', 'AuthController@updateProfile')->name('update-profile');
+	
 });
